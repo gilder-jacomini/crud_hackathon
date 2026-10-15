@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar tarefa</title>
+</head>
+<body>
+    <h1>Editar tarefa</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label for="titulo">Título:</label>
+
+        <input
+            type="text"
+            id="titulo"
+            name="titulo"
+            value="{{ tarefa.titulo }}"
+            required
+        >
+
+        <button type="submit">Salvar alterações</button>
+    </form>
+
+    <p>
+        <a href="{% url 'lista_tarefas' %}">Voltar para a lista</a>
+    </p>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Tarefas</title>
+</head>
+
+<body>
+    <h1>Minhas Tarefas</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <input type="text" name="titulo" placeholder="Digite uma tarefa" required>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <hr>
+
+    <h2>Tarefas cadastradas</h2>
+
+    <ul>
+        {% for tarefa in tarefas %}
+        <li>
+            {{ tarefa.titulo }}
+
+            {% if tarefa.concluida %}
+            - Concluída
+            {% else %}
+            - Pendente
+            {% endif %}
+
+            <form method="POST" action="{% url 'marcar_concluida' tarefa.id %}" style="display: inline;">
+                {% csrf_token %}
+
+                <button type="submit">
+                    {% if tarefa.concluida %}
+                    Reabrir
+                    {% else %}
+                    Concluir
+                    {% endif %}
+                </button>
+            </form>
+
+            <a href="{% url 'editar_tarefa' tarefa.id %}">
+                Editar
+            </a>
+            <form method="POST" action="{% url 'excluir_tarefa' tarefa.id %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Excluir</button>
+            </form>
+        </li>
+        {% empty %}
+        <li>Nenhuma tarefa cadastrada.</li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
