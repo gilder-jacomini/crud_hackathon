@@ -1,61 +1,413 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Tarefas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Minhas Tarefas</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #252840;
+        }
+
+        header {
+            background: white;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #e8eaf2;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .usuario {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .usuario p {
+            margin: 0;
+            color: #626980;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .introducao {
+            margin-bottom: 25px;
+        }
+
+        .introducao h2 {
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+
+        .introducao p {
+            color: #7a8093;
+            margin-top: 0;
+        }
+
+        .form-cadastro {
+            display: flex;
+            gap: 12px;
+            padding: 20px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px #25284008;
+            margin-bottom: 30px;
+        }
+
+        .form-cadastro input {
+            flex: 1;
+            min-width: 0;
+            padding: 13px;
+            border: 1px solid #dfe3ed;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-cadastro input:focus {
+            border-color: #6558e8;
+        }
+
+        button, .btn {
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #6558e8;
+            color: white;
+        }
+
+        .btn-sair {
+            background: #f0f1f7;
+            color: #42485c;
+        }
+
+        .titulo-lista {
+            margin-bottom: 16px;
+            font-size: 19px;
+        }
+
+        .lista-tarefas {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .card-tarefa {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            border: 1px solid #e7eaf2;
+            box-shadow: 0 4px 15px #25284008;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card-tarefa:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px #25284012;
+        }
+
+        .card-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .titulo-tarefa {
+            margin: 0 0 13px;
+            font-size: 17px;
+            overflow-wrap: anywhere;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #98620b;
+            background: #fff2d9;
+        }
+
+        .card-tarefa.concluida .status {
+            color: #21834e;
+            background: #e1f8eb;
+        }
+
+        .card-tarefa.concluida .titulo-tarefa {
+            color: #9298a8;
+            text-decoration: line-through;
+        }
+
+        .controle-conclusao {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 25px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .switch-visual {
+            position: absolute;
+            inset: 0;
+            background: #cbd0dc;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .switch-visual::before {
+            content: "";
+            position: absolute;
+            height: 19px;
+            width: 19px;
+            left: 3px;
+            top: 3px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px #0002;
+            transition: 0.25s;
+        }
+
+        .switch input:checked + .switch-visual {
+            background: #6558e8;
+        }
+
+        .switch input:checked + .switch-visual::before {
+            transform: translateX(19px);
+        }
+
+        .switch input:focus-visible + .switch-visual {
+            outline: 3px solid #bcb5ff;
+            outline-offset: 2px;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+            border-top: 1px solid #edf0f5;
+            margin-top: 20px;
+            padding-top: 15px;
+        }
+
+        .btn-editar {
+            color: #5847cc;
+            background: #eeebff;
+        }
+
+        .btn-excluir {
+            color: #c53c3c;
+            background: #ffeded;
+        }
+
+        .vazio {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border: 1px dashed #d9ddeb;
+            border-radius: 14px;
+            color: #777f92;
+        }
+
+        @media (max-width: 650px) {
+            header {
+                align-items: flex-start;
+                padding: 18px 20px;
+            }
+
+            header h1 {
+                font-size: 20px;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+
+            .lista-tarefas {
+                grid-template-columns: 1fr;
+            }
+
+            .form-cadastro {
+                flex-direction: column;
+            }
+
+            .form-cadastro button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Minhas Tarefas</h1>
 
-    <form method="POST">
+<header>
+    <h1>✓ Minhas Tarefas</h1>
+
+    <div class="usuario">
+        <p>
+            Olá, <strong>{{ request.user.username }}</strong>!
+        </p>
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-sair">Sair ↗</button>
+        </form>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="introducao">
+        <h2>Organize seu dia</h2>
+        <p>Pequenos passos, grandes resultados.</p>
+    </section>
+
+    <form method="POST" class="form-cadastro">
         {% csrf_token %}
 
-        <input type="text" name="titulo" placeholder="Digite uma tarefa" required>
+        <input
+            type="text"
+            name="titulo"
+            placeholder="O que você precisa fazer hoje?"
+            maxlength="100"
+            required
+        >
 
-        <button type="submit">Cadastrar</button>
+        <button type="submit" class="btn-primary">
+            + Cadastrar tarefa
+        </button>
     </form>
 
-    <hr>
+    <h3 class="titulo-lista">Tarefas cadastradas</h3>
 
-    <h2>Tarefas cadastradas</h2>
+    <section class="lista-tarefas">
 
-    <ul>
         {% for tarefa in tarefas %}
-        <li>
-            {{ tarefa.titulo }}
 
-            {% if tarefa.concluida %}
-            - Concluída
-            {% else %}
-            - Pendente
-            {% endif %}
+            <article class="card-tarefa {% if tarefa.concluida %}concluida{% endif %}">
 
-            <form method="POST" action="{% url 'marcar_concluida' tarefa.id %}" style="display: inline;">
-                {% csrf_token %}
+                <div class="card-topo">
 
-                <button type="submit">
-                    {% if tarefa.concluida %}
-                    Reabrir
-                    {% else %}
-                    Concluir
-                    {% endif %}
-                </button>
-            </form>
+                    <div>
+                        <h3 class="titulo-tarefa">
+                            {{ tarefa.titulo }}
+                        </h3>
 
-            <a href="{% url 'editar_tarefa' tarefa.id %}">
-                Editar
-            </a>
-            <form method="POST" action="{% url 'excluir_tarefa' tarefa.id %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit">Excluir</button>
-            </form>
-        </li>
+                        <span class="status">
+                            {% if tarefa.concluida %}
+                                ✓ Concluída
+                            {% else %}
+                                ● Pendente
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="controle-conclusao">
+
+                        <form
+                            method="POST"
+                            action="{% url 'marcar_concluida' tarefa.id %}"
+                        >
+                            {% csrf_token %}
+
+                            <label class="switch"
+                                   title="{% if tarefa.concluida %}Reabrir tarefa{% else %}Concluir tarefa{% endif %}">
+
+                                <input
+                                    type="checkbox"
+                                    {% if tarefa.concluida %}checked{% endif %}
+                                    onchange="this.form.submit()"
+                                    aria-label="{% if tarefa.concluida %}Reabrir tarefa{% else %}Concluir tarefa{% endif %}"
+                                >
+
+                                <span class="switch-visual"></span>
+                            </label>
+                        </form>
+
+                    </div>
+                </div>
+
+                <div class="acoes">
+
+                    <a
+                        href="{% url 'editar_tarefa' tarefa.id %}"
+                        class="btn btn-editar"
+                    >
+                        ✎ Editar
+                    </a>
+
+                    <form
+                        method="POST"
+                        action="{% url 'excluir_tarefa' tarefa.id %}"
+                        onsubmit="return confirm('Deseja excluir esta tarefa?')"
+                    >
+                        {% csrf_token %}
+
+                        <button type="submit" class="btn-excluir">
+                            Excluir
+                        </button>
+                    </form>
+
+                </div>
+
+            </article>
+
         {% empty %}
-        <li>Nenhuma tarefa cadastrada.</li>
-        {% endfor %}
-    </ul>
-</body>
 
+            <div class="vazio">
+                <h3>Nenhuma tarefa cadastrada</h3>
+                <p>Adicione sua primeira tarefa no campo acima!</p>
+            </div>
+
+        {% endfor %}
+
+    </section>
+
+</main>
+
+</body>
 </html>

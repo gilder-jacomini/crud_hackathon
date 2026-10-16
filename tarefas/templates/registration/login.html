@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Entrar | Minhas Tarefas</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #252840;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .marca {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .marca-icone {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #6558e8;
+            color: white;
+            border-radius: 17px;
+            font-size: 29px;
+            font-weight: bold;
+            box-shadow: 0 8px 20px #6558e830;
+        }
+
+        .marca h1 {
+            font-size: 27px;
+            margin: 0 0 9px;
+        }
+
+        .marca p {
+            margin: 0;
+            color: #7a8093;
+            font-size: 14px;
+        }
+
+        .card {
+            background: white;
+            padding: 32px;
+            border: 1px solid #e7eaf2;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px #2528400a;
+        }
+
+        .card h2 {
+            font-size: 21px;
+            margin: 0 0 8px;
+        }
+
+        .descricao {
+            font-size: 14px;
+            color: #7a8093;
+            margin: 0 0 25px;
+        }
+
+        .campo {
+            margin-bottom: 19px;
+        }
+
+        .campo label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .campo input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #dfe3ed;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+            background: white;
+        }
+
+        .campo input:focus {
+            border-color: #6558e8;
+            box-shadow: 0 0 0 3px #6558e815;
+        }
+
+        .erro {
+            background: #fff0f0;
+            color: #bd3636;
+            padding: 12px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .botao {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #6558e8;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .botao:hover {
+            background: #5144d0;
+        }
+
+        .rodape {
+            text-align: center;
+            font-size: 14px;
+            color: #7a8093;
+            margin-top: 23px;
+        }
+
+        .rodape a {
+            color: #6558e8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .rodape a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <div class="marca">
+        <div class="marca-icone">✓</div>
+        <h1>Minhas Tarefas</h1>
+        <p>Organize seu dia. Conquiste seus objetivos.</p>
+    </div>
+
+    <div class="card">
+        <h2>Bem-vindo de volta!</h2>
+        <p class="descricao">Entre na sua conta para continuar.</p>
+
+        {% if form.errors %}
+            <div class="erro">
+                Usuário ou senha incorretos. Verifique seus dados e tente novamente.
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="campo">
+                <label for="id_username">Usuário</label>
+                <input
+                    type="text"
+                    name="username"
+                    id="id_username"
+                    autocomplete="username"
+                    placeholder="Digite seu usuário"
+                    required
+                    autofocus
+                >
+            </div>
+
+            <div class="campo">
+                <label for="id_password">Senha</label>
+                <input
+                    type="password"
+                    name="password"
+                    id="id_password"
+                    autocomplete="current-password"
+                    placeholder="Digite sua senha"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="botao">
+                Entrar na conta →
+            </button>
+        </form>
+    </div>
+
+    <div class="rodape">
+        Ainda não tem uma conta?
+        <a href="{% url 'cadastrar_usuario' %}">Criar conta</a>
+    </div>
+
+</div>
+
+</body>
+</html>
